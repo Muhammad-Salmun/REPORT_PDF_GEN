@@ -13,17 +13,17 @@ WO_PO_txt = 'WO/PO No: ' + str(WO_PO_no)
 uniq_id = 116998
 id_txt = 'S. No: ' + str(uniq_id)
 
-data = (
+user_data = (
     ('VESSEL NAME', 'SAGAR VIOLET', 'LOCATION', 'KORFAKKAN ANCH', 'ENGINEER', 'NAME'),
     ('PIC', 'JERIL', 'IMO', '9292981', 'DATE', '06/05/2022'),
-    ('EQPT', 'INSPECTION', 'MAKE/MODEL', 'IT AND V SAT', 'SL NO', '')
+    ('EQPT', 'INSPECTION', 'MAKE/MODEL', 'IT AND V SAT', 'SL NO', str(uniq_id))
 )
 
 # template
 class PDF(FPDF):
     def header(self):
         #image
-        self.image('logo.png', x = 10,y = 10, w = report_pdf.w / 4)
+        self.image('logo.png', x = 10,y = 10, w = report_pdf.epw / 4)
         self.ln(5)
         # font
         self.set_font('helvetica', 'B', 10)
@@ -54,7 +54,18 @@ class PDF(FPDF):
         self.cell(0, 5, ch_title,align='C', ln=1)
         # line break
         self.ln()
-
+    
+    # Report data in table
+    def table_data(self, data):
+        self.set_font("Times",'B', size=9)
+        line_height = (self.font_size * 2.5) + 1
+        col_width = self.epw / 6  # distribute content evenly
+        for row in data:
+            for datum in row:
+                self.multi_cell(col_width, line_height, datum, border=1,
+                        new_x="RIGHT", new_y="TOP", max_line_height=report_pdf.font_size, align='C')
+            self.ln(line_height)
+        self.ln(10)
     # Chapter content
     def report_body(self, name):
         # read text file
@@ -102,15 +113,8 @@ report_pdf.ln(20)
 report_pdf.page_title('SERVICE REPORT')
 
 # Data on box
-report_pdf.set_font("Times",'B', size=9)
-line_height = (report_pdf.font_size * 2.5) + 1
-col_width = report_pdf.epw / 6  # distribute content evenly
-for row in data:
-    for datum in row:
-        report_pdf.multi_cell(col_width, line_height, datum, border=1,
-                new_x="RIGHT", new_y="TOP", max_line_height=report_pdf.font_size)
-    report_pdf.ln(line_height)
-report_pdf.ln(10)
+report_pdf.table_data(user_data)
+
 #report body
 report_pdf.report_body('chp1.txt')
 
