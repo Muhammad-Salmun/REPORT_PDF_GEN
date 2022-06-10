@@ -6,6 +6,7 @@ address = 'P.O Box: 14045, Ajman, U.A.E \n Tel:+971 6 7411426 \n Fax: +971 6 741
 
 job_txt = 'Job no: '
 
+# template
 class PDF(FPDF):
     def header(self):
         #image
@@ -51,9 +52,6 @@ class PDF(FPDF):
         self.multi_cell(0, 5, txt)
         # line break
         self.ln()
-        # end each chapter
-        self.set_font('times', 'I', 12)
-        self.cell(0, 5, 'END OF CHAPTER',border=1)
 
 # start a pdf element
 report_pdf = PDF('P', 'mm', 'A4')
@@ -62,13 +60,14 @@ report_pdf = PDF('P', 'mm', 'A4')
 report_pdf.set_title(title)
 report_pdf.set_author('Muhammad Salmun')
 
-
 # Set auto page break
-report_pdf.set_auto_page_break(auto = True, margin = 15)
+report_pdf.set_auto_page_break(auto = True, margin = 25)
 
 # Add Page
 report_pdf.add_page()
 
+
+## content of page
 # data with border
 report_pdf.set_font('times', '', 16)
 report_pdf.cell(80, 8, job_txt, border=1)
@@ -79,6 +78,11 @@ report_pdf.page_title('SERVICE REPORT')
 
 #report body
 report_pdf.report_body('chp1.txt')
+
+# end each chapter
+report_pdf.set_font('times', 'I', 12)
+report_pdf.cell(0, 5, 'END OF CHAPTER',border=1)
+
 
 # creating pdf
 report_pdf.output('report.pdf')
