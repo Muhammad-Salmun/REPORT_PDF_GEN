@@ -4,18 +4,32 @@ title = 'Maintanance report'
 
 address = 'P.O Box: 14045, Ajman, U.A.E \n Tel:+971 6 7411426 \n Fax: +971 6 7411427 \n Mail: info@mastersystems-intl.com \n Web: www.mastersystems.org'
 
-job_txt = 'Job no: '
+job_no = 'JB01220508284'
+job_txt = 'Job no: ' + job_no
+
+WO_PO_no = ''
+WO_PO_txt = 'WO/PO No: ' + str(WO_PO_no)
+
+uniq_id = 116998
+id_txt = 'S. No: ' + str(uniq_id)
+
+data = (
+    ('VESSEL NAME', 'SAGAR VIOLET', 'LOCATION', 'KORFAKKAN ANCH', 'ENGINEER', 'NAME'),
+    ('PIC', 'JERIL', 'IMO', '9292981', 'DATE', '06/05/2022'),
+    ('EQPT', 'INSPECTION', 'MAKE/MODEL', 'IT AND V SAT', 'SL NO', '')
+)
 
 # template
 class PDF(FPDF):
     def header(self):
         #image
         self.image('logo.png', x = 10,y = 10, w = report_pdf.w / 4)
+        self.ln(5)
         # font
         self.set_font('helvetica', 'B', 10)
         self.set_x(120)
         title_w = 0
-        title_line_h = 5.5
+        title_line_h = 4
         # Title
         self.multi_cell(title_w, title_line_h, address, align='R')
         # Line break
@@ -69,13 +83,34 @@ report_pdf.add_page()
 
 ## content of page
 # data with border
-report_pdf.set_font('times', '', 16)
+report_pdf.set_font('times', '', 12)
 report_pdf.cell(80, 8, job_txt, border=1)
+report_pdf.ln()
+report_pdf.cell(80, 8, WO_PO_txt, border=1)
 report_pdf.ln(20)
+
+report_pdf.set_y(50)
+report_pdf.set_font('times', '', 14)
+report_pdf.cell(0, 8, 'S. No:             ', align='R')
+report_pdf.set_text_color(255,0,0)
+report_pdf.cell(0, 8, str(uniq_id), align='R')
+report_pdf.set_text_color(0,0,0)
+report_pdf.ln(20)
+
 
 # report title
 report_pdf.page_title('SERVICE REPORT')
 
+# Data on box
+report_pdf.set_font("Times",'B', size=9)
+line_height = (report_pdf.font_size * 2.5) + 1
+col_width = report_pdf.epw / 6  # distribute content evenly
+for row in data:
+    for datum in row:
+        report_pdf.multi_cell(col_width, line_height, datum, border=1,
+                new_x="RIGHT", new_y="TOP", max_line_height=report_pdf.font_size)
+    report_pdf.ln(line_height)
+report_pdf.ln(10)
 #report body
 report_pdf.report_body('chp1.txt')
 
